@@ -1,12 +1,17 @@
+'use client'
 import { ReactNode } from "react";
+import { name } from "tailwindcss";
+
 
 interface Props {
     children: ReactNode;
     type?: string;
+    name: string;
+    buttonClick?: () => any;
 }
 
 
-export default function Button({children, type} : Props) {
+export default function Button({children, type, name, buttonClick} : Props) {
   let classes = ""
   switch (type) {
     case "clear":
@@ -24,6 +29,6 @@ export default function Button({children, type} : Props) {
       break;
   }
   return (
-    <button className={classes}>{children}</button>
+    <button className={classes} name={name} onClick={buttonClick}>{children}</button>
   );
 }
