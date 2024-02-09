@@ -1,4 +1,6 @@
-import Image from "next/image";
+import Button from "./components/button";
+import Display from "./components/display";
+import Keyboard from "./components/keyboard/keyboard";
 
 export default function Home() {
   return (
@@ -9,8 +11,9 @@ export default function Home() {
         </h1>
 
       </div>
-      <div id="calculator">
-          
+      <div id="calculator" className="w-[356px] h-[566px] bg-zinc-800 rounded-3xl shadow-3d">
+        <Display/>
+        <Keyboard/>
       </div>
     </main>
   );
