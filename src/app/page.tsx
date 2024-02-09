@@ -10,47 +10,63 @@ interface Calculator {
 export default function Home({onClick} : Calculator) {
   const [calc, setCalc] = useState("");
   const [memo, setMemo] = useState("");
+  const [isResult, setIsResult] = useState(false);
   function handleCalc(e) {
     let targetName = e.currentTarget.name;
-    let last = calc.slice(-1);
+    let last = isResult? "":calc.slice(-1);
     switch (targetName) {
       case "CE":
-        setCalc(calc.slice(0, -1));
+        if(!isResult){
+          setCalc(calc.slice(0, -1));
+        } else {
+          setMemo(calc);
+          setCalc("");
+        }
+        setIsResult(false);
         break;
       case "C":
         setCalc("");
+        setIsResult(false);
         break;
       case "+":
-        if((last !== "" && !isNaN(last)) || last === "%") {
+        if((last !== "" && !isNaN(last)) || last === "%" || isResult) {
           setCalc(calc+targetName);
         }
+        setIsResult(false);
         break;
       case "-":
-        if((last !== "" && !isNaN(last)) || last === "%") {
+        if((last !== "" && !isNaN(last)) || last === "%" || isResult) {
           setCalc(calc+targetName);
         }
+        setIsResult(false);
         break;
       case "*":
-        if((last !== "" && !isNaN(last)) || last === "%") {
+        if((last !== "" && !isNaN(last)) || last === "%" || isResult) {
           setCalc(calc+targetName);
         }
+        setIsResult(false);
         break;
       case "/":
-        if((last !== "" && !isNaN(last)) || last === "%") {
+        if((last !== "" && !isNaN(last)) || last === "%" || isResult) {
           setCalc(calc+targetName);
         }
+        setIsResult(false);
         break;
       case "%":
-        if(last !== "" && !isNaN(last)) {
+        if(last !== "" && !isNaN(last) || isResult) {
           setCalc(calc+targetName);
         }
+        setIsResult(false);
         break;
       case "equals":
         setMemo(calc);
-        setCalc("RESULT");
+        setCalc(eval(calc));
+        setIsResult(true);
         break;
       default:
-        setCalc(calc+targetName);
+        if(!isResult){
+          setCalc(calc+targetName);
+        }
         break;
     }
  }
