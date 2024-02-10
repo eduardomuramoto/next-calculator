@@ -40,12 +40,8 @@ export default function Home({onClick} : Calculator) {
         setIsResult(false);
         break;
       case "+":
-        if((last !== "" && !isNaN(last)) || last === "%" || isResult || lastChar === ")") {
-          setCalc(calc+targetName);
-          setWasOddEven(false);
-          setIsResult(false);
-        }
-        break;
+      case "*":
+      case "/":
       case "-":
         if((last !== "" && !isNaN(last)) || last === "%" || isResult || lastChar === ")") {
           setCalc(calc+targetName);
@@ -53,27 +49,7 @@ export default function Home({onClick} : Calculator) {
           setIsResult(false);
         }
         break;
-      case "*":
-        if((last !== "" && !isNaN(last)) || last === "%" || isResult || lastChar === ")") {
-          setCalc(calc+targetName);
-          setWasOddEven(false);
-          setIsResult(false);
-        }
-        break;
-      case "/":
-        if((last !== "" && !isNaN(last)) || last === "%" || isResult || lastChar === ")") {
-          setCalc(calc+targetName);
-          setWasOddEven(false);
-          setIsResult(false);
-        }
-        break;
       case "%":
-        if(last !== "" && !isNaN(last) || isResult) {
-          setCalc(calc+targetName);
-          setWasOddEven(false);
-          setIsResult(false);
-        }
-        break;
       case ".":
         if(last !== "" && !isNaN(last) || isResult) {
           setCalc(calc+targetName);
@@ -86,7 +62,6 @@ export default function Home({onClick} : Calculator) {
           const lastNumber = lastChar === ")" ? calc.split(specialChars).slice(-2)[0] : calc.split(specialChars).slice(-1);
           if(wasOddEven) {
             if(lastChar === ")") {
-              console.log(calc);
               setCalc(calc.slice(0,-(lastNumber.length+3))+lastNumber);
             } else {
               setCalc(calc.slice(0,-(lastNumber.length+1))+"-("+lastNumber+")");
@@ -109,7 +84,6 @@ export default function Home({onClick} : Calculator) {
         }
         break;
       default:
-        console.log(last !== ")" && !isResult);
         if(last !== ")" && !isResult  ){
           setCalc(calc+targetName);
           setIsResult(false);
