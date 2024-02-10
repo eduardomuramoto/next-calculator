@@ -74,6 +74,13 @@ export default function Home({onClick} : Calculator) {
           setIsResult(false);
         }
         break;
+      case ".":
+        if(last !== "" && !isNaN(last) || isResult) {
+          setCalc(calc+targetName);
+          setWasOddEven(false);
+          setIsResult(false);
+        }
+        break;
       case "evenodd":
         if(wasOddEven || last !== "" && !isNaN(last) || isResult) {
           const lastNumber = lastChar === ")" ? calc.split(specialChars).slice(-2)[0] : calc.split(specialChars).slice(-1);
