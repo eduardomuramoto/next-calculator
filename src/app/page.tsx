@@ -16,18 +16,18 @@ export default function Home({onClick} : Calculator) {
   const [memo, setMemo] = useState("");
   const [wasOddEven, setWasOddEven] = useState(false);
   const [isResult, setIsResult] = useState(false);
-  const lastChar = calc.charAt(calc.length-1);
   const specialChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
   function handleCalc(e) {
+    let lastChar = calc.charAt(calc.length-1);
     let targetName = e.currentTarget.name;
     let last = isResult? "":calc.slice(-1);
     switch (targetName) {
       case "CE":
-        if(!isResult){
+        if(last !== ")" && !isResult){
           setCalc(calc.slice(0, -1));
           setWasOddEven(false);
           setIsResult(false);
-        } else {
+        } if(isResult) {
           setMemo(calc);
           setCalc("");
           setWasOddEven(false);
@@ -79,10 +79,13 @@ export default function Home({onClick} : Calculator) {
           const lastNumber = lastChar === ")" ? calc.split(specialChars).slice(-2)[0] : calc.split(specialChars).slice(-1);
           if(wasOddEven) {
             if(lastChar === ")") {
+              console.log(calc);
               setCalc(calc.slice(0,-(lastNumber.length+3))+lastNumber);
             } else {
               setCalc(calc.slice(0,-(lastNumber.length+1))+"-("+lastNumber+")");
             }
+          } if( isResult ) {
+            setCalc("-("+lastNumber+")");
           } else {
             setCalc(calc.slice(0,-(lastNumber.length+1))+"-("+lastNumber+")");
           }
@@ -99,11 +102,12 @@ export default function Home({onClick} : Calculator) {
         }
         break;
       default:
-        if(lastChar !== ")" && !isResult || !isResult ){
+        console.log(last !== ")" && !isResult);
+        if(last !== ")" && !isResult  ){
           setCalc(calc+targetName);
           setIsResult(false);
+          setWasOddEven(false);
         }
-        setWasOddEven(false);
         break;
     }
  }
