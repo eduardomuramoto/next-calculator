@@ -2,6 +2,10 @@
 import { useState } from "react";
 import Display from "./components/display";
 import Keyboard from "./components/keyboard/keyboard";
+import { create, all } from 'mathjs'
+
+const config = { }
+const math = create(all, config)
 
 interface Calculator {
   onClick: React.MouseEvent<HTMLElement>;
@@ -10,7 +14,10 @@ interface Calculator {
 export default function Home({onClick} : Calculator) {
   const [calc, setCalc] = useState("");
   const [memo, setMemo] = useState("");
+  const [wasOddEven, setWasOddEven] = useState(false);
   const [isResult, setIsResult] = useState(false);
+  const lastChar = calc.charAt(calc.length-1);
+  const specialChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
   function handleCalc(e) {
     let targetName = e.currentTarget.name;
     let last = isResult? "":calc.slice(-1);
@@ -18,55 +25,85 @@ export default function Home({onClick} : Calculator) {
       case "CE":
         if(!isResult){
           setCalc(calc.slice(0, -1));
+          setWasOddEven(false);
+          setIsResult(false);
         } else {
           setMemo(calc);
           setCalc("");
+          setWasOddEven(false);
+          setIsResult(false);
         }
-        setIsResult(false);
         break;
       case "C":
         setCalc("");
+        setWasOddEven(false);
         setIsResult(false);
         break;
       case "+":
-        if((last !== "" && !isNaN(last)) || last === "%" || isResult) {
+        if((last !== "" && !isNaN(last)) || last === "%" || isResult || lastChar === ")") {
           setCalc(calc+targetName);
+          setWasOddEven(false);
+          setIsResult(false);
         }
-        setIsResult(false);
         break;
       case "-":
-        if((last !== "" && !isNaN(last)) || last === "%" || isResult) {
+        if((last !== "" && !isNaN(last)) || last === "%" || isResult || lastChar === ")") {
           setCalc(calc+targetName);
+          setWasOddEven(false);
+          setIsResult(false);
         }
-        setIsResult(false);
         break;
       case "*":
-        if((last !== "" && !isNaN(last)) || last === "%" || isResult) {
+        if((last !== "" && !isNaN(last)) || last === "%" || isResult || lastChar === ")") {
           setCalc(calc+targetName);
+          setWasOddEven(false);
+          setIsResult(false);
         }
-        setIsResult(false);
         break;
       case "/":
-        if((last !== "" && !isNaN(last)) || last === "%" || isResult) {
+        if((last !== "" && !isNaN(last)) || last === "%" || isResult || lastChar === ")") {
           setCalc(calc+targetName);
+          setWasOddEven(false);
+          setIsResult(false);
         }
-        setIsResult(false);
         break;
       case "%":
         if(last !== "" && !isNaN(last) || isResult) {
           setCalc(calc+targetName);
+          setWasOddEven(false);
+          setIsResult(false);
         }
-        setIsResult(false);
+        break;
+      case "evenodd":
+        if(wasOddEven || last !== "" && !isNaN(last) || isResult) {
+          const lastNumber = lastChar === ")" ? calc.split(specialChars).slice(-2)[0] : calc.split(specialChars).slice(-1);
+          if(wasOddEven) {
+            if(lastChar === ")") {
+              setCalc(calc.slice(0,-(lastNumber.length+3))+lastNumber);
+            } else {
+              setCalc(calc.slice(0,-(lastNumber.length+1))+"-("+lastNumber+")");
+            }
+          } else {
+            setCalc(calc.slice(0,-(lastNumber.length+1))+"-("+lastNumber+")");
+          }
+          setWasOddEven(true);
+          setIsResult(false);
+        }
         break;
       case "equals":
+        if(last !== "" && !isNaN(last) || lastChar === ")") {
         setMemo(calc);
-        setCalc(eval(calc));
+        setCalc(math.evaluate(calc).toString());
+        setWasOddEven(false);
         setIsResult(true);
+        }
         break;
       default:
-        if(!isResult){
+        if(lastChar !== ")" && !isResult || !isResult ){
           setCalc(calc+targetName);
+          setIsResult(false);
         }
+        setWasOddEven(false);
         break;
     }
  }
